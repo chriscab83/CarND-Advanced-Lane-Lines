@@ -9,19 +9,30 @@ class ImageHandler:
         self.dist = dist
         self.img_size = img_size
 
-        offset_bot_x = 200
-        offset_top_x = 40
-        src = np.float32([
-            (img_size[0]/2-offset_top_x, 445),
-            (img_size[0]/2+offset_top_x, 445),
-            (img_size[0]-offset_bot_x, 720),
-            (offset_bot_x[0], 720)
-        ])
+        top_w = 0.1
+        bot_w = 0.87
+        height = 0.37
 
-        offset = 300
+        top_y = img_size[1]*(1.0-height)
+        bot_y = img_size[1]
+        top_rgt_x = (img_size[0]/2 + img_size[0]*top_w/2)
+        top_lft_x = (img_size[0]/2 - img_size[0]*top_w/2)
+        bot_rgt_x = (img_size[0]/2 + img_size[0]*bot_w/2)
+        bot_lft_x = (img_size[0]/2 - img_size[0]*bot_w/2)
+
+        pt1 = [top_lft_x, top_y]
+        pt2 = [top_rgt_x, top_y]
+        pt3 = [bot_rgt_x, bot_y]
+        pt4 = [bot_lft_x, bot_y]
+
+        pts = [pt1, pt2, pt3, pt4]
+
+        src = np.float32(pts)
+
+        offset = 200
         dst = np.float32([
-            (offset, -offset*1),
-            (img_size[0]-offset, -offset*1),
+            (offset, 0),
+            (img_size[0]-offset, 0),
             (img_size[0]-offset, img_size[1]),
             (offset, img_size[1])
         ])
@@ -38,8 +49,3 @@ class ImageHandler:
 
     def unwarp(self, img):
         return cv2.warpPerspective(img, self.Minv, self.img_size, flags=cv2.INTER_LINEAR)
-
-    def binary_thresh(img, thresh=(0, 255)):
-        binary = np.zeros_like(img)
-        binary[(img > thresh[0]) & (img <= thresh[1])] = 1
-        return binary
