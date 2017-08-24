@@ -10,11 +10,11 @@ from image_handler import ImageHandler
 
 
 def draw_region(img, pts, color=[255, 0, 0], lwidth=5):
+    img = np.copy(img)
     cv2.line(img, pts[0], pts[1], color, lwidth)
     cv2.line(img, pts[1], pts[2], color, lwidth)
     cv2.line(img, pts[2], pts[3], color, lwidth)
     cv2.line(img, pts[3], pts[0], color, lwidth)
-
     return img
 
 
